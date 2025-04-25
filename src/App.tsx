@@ -154,14 +154,23 @@ export default function App() {
 
   const qrData = getQRData(selectedType, forms[selectedType]);
 
+  const isEventDateValid =
+    !forms.event.start ||
+    !forms.event.end ||
+    new Date(forms.event.start) <= new Date(forms.event.end);
+
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-4 md:p-8 max-w-5xl w-full flex flex-col md:flex-row gap-8">
+    <div className="min-h-screen flex flex-col justify-center items-start bg-gray-100 p-4">
+      <div
+        className="bg-white rounded-2xl shadow-xl p-4 md:p-8 w-full min-w-[1200px] min-h-[700px] flex flex-col md:flex-row items-start"
+        style={{ columnGap: "5vw" }}
+      >
         {/* Left Column: Function selection and input */}
-        <div className="md:w-1/2 w-full flex flex-col items-center md:items-start">
-          <h1 className="text-4xl font-bold text-center md:text-left mb-8 w-full">
+        <div className="md:w-1/2 w-full flex flex-col items-start">
+          <h1 className="text-4xl font-bold text-left mb-2 w-full">
             QR Code Generator
           </h1>
+          <hr className="my-4 border-gray-300 w-full" />
           {/* Icon row */}
           <div className="flex justify-center md:justify-start gap-6 mb-3 w-full">
             {QR_TYPES.map((type) => (
@@ -338,10 +347,10 @@ export default function App() {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold mb-1">
-                    Start (YYYYMMDDTHHmmss):
-                  </label>
+                  <label className="block font-bold mb-1">Start:</label>
                   <input
+                    type="datetime-local"
+                    step="900"
                     className="w-full border rounded p-2"
                     value={forms.event.start}
                     onChange={(e) =>
@@ -350,10 +359,10 @@ export default function App() {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold mb-1">
-                    End (YYYYMMDDTHHmmss):
-                  </label>
+                  <label className="block font-bold mb-1">End:</label>
                   <input
+                    type="datetime-local"
+                    step="900"
                     className="w-full border rounded p-2"
                     value={forms.event.end}
                     onChange={(e) =>
@@ -361,6 +370,11 @@ export default function App() {
                     }
                   />
                 </div>
+                {!isEventDateValid && (
+                  <p className="text-red-500 text-sm mt-2">
+                    Data początkowa nie może być późniejsza niż końcowa.
+                  </p>
+                )}
               </div>
             )}
             {selectedType === "message" && (
@@ -420,7 +434,7 @@ export default function App() {
                     />
                     <label className="block font-bold mb-1">Body:</label>
                     <textarea
-                      className="w-full border rounded p-2"
+                      className="w-full border rounded p-2 h-40"
                       value={forms.message.body}
                       onChange={(e) =>
                         handleFormChange("message", "body", e.target.value)
@@ -440,7 +454,7 @@ export default function App() {
                     />
                     <label className="block font-bold mb-1">Message:</label>
                     <textarea
-                      className="w-full border rounded p-2"
+                      className="w-full border rounded p-2 h-40"
                       value={forms.message.body}
                       onChange={(e) =>
                         handleFormChange("message", "body", e.target.value)
@@ -465,7 +479,7 @@ export default function App() {
           </div>
         </div>
         {/* Right Column: QR details and code */}
-        <div className="md:w-1/2 w-full flex flex-col items-center md:items-start">
+        <div className="md:w-1/2 w-full flex flex-col items-center md:items-start md:mt-20">
           <div className="flex flex-col md:flex-row gap-4 mb-6 w-full">
             <div className="flex-1">
               <label
