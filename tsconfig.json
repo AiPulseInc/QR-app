@@ -3,12 +3,9 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-<<<<<<< HEAD
   ],
   "compilerOptions": {
     "jsx": "react-jsx"
   }
-=======
-  ]
->>>>>>> 3b49b02511c95a0a88cdffffed4468b0cbe355ab
+
 }
