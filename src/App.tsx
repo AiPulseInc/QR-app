@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { QRCodeGenerator } from "./components/QRCodeGenerator";
 import {
   FaGlobe,
@@ -159,18 +159,34 @@ export default function App() {
     !forms.event.end ||
     new Date(forms.event.start) <= new Date(forms.event.end);
 
+  const [darkMode, setDarkMode] = useState(false);
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
-    <div className="min-h-screen w-screen flex justify-center items-center bg-gray-100">
+    <div className="min-h-screen w-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900 transition-colors">
+      <button
+        className="absolute top-6 right-8 bg-gray-200 dark:bg-gray-700 rounded-full px-4 py-2 text-sm shadow transition-colors z-50 dark:text-gray-100"
+        onClick={() => setDarkMode((prev) => !prev)}
+      >
+        {darkMode ? "☀️ Light" : "🌙 Dark"}
+      </button>
+
       <div
-        className="bg-white rounded-2xl shadow-xl p-4 md:p-8 min-w-[400px] max-w-[1200px] min-h-[700px] flex flex-col md:flex-row items-start mx-auto"
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 md:p-8 min-w-[400px] max-w-[1200px] min-h-[700px] flex flex-col md:flex-row items-start mx-auto transition-colors"
         style={{ columnGap: "5vw" }}
       >
         {/* Left Column: Function selection and input */}
         <div className="md:w-1/2 w-full flex flex-col items-start">
-          <h1 className="text-4xl font-bold text-left mb-2 w-full">
+          <h1 className="text-4xl font-bold text-left mb-2 w-full dark:text-gray-100">
             QR Code Generator
           </h1>
-          <hr className="my-4 border-gray-300 w-full" />
+          <hr className="my-4 border-gray-300 w-full dark:border-gray-600" />
           {/* Icon row */}
           <div className="flex justify-center md:justify-start gap-6 mb-3 w-full">
             {QR_TYPES.map((type) => (
@@ -178,8 +194,8 @@ export default function App() {
                 key={type.key}
                 className={`text-3xl p-4 rounded-full border-2 transition focus:outline-none ${
                   selectedType === type.key
-                    ? "border-blue-500 bg-blue-100"
-                    : "border-gray-300 hover:bg-gray-100"
+                    ? "border-blue-500 bg-blue-100 dark:bg-blue-700 dark:border-blue-500"
+                    : "border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
                 }`}
                 onClick={() => setSelectedType(type.key)}
                 aria-label={type.label}
@@ -190,19 +206,22 @@ export default function App() {
             ))}
           </div>
           {/* Function name */}
-          <div className="text-2xl font-semibold text-gray-700 mb-6 w-full text-center md:text-left">
+          <div className="text-2xl font-semibold text-gray-700 mb-6 w-full text-center md:text-left dark:text-gray-100">
             {QR_TYPES.find((t) => t.key === selectedType)?.label}
           </div>
           {/* Dynamic form */}
           <div className="mb-6 w-full">
             {selectedType === "url" && (
               <div>
-                <label className="block font-bold mb-2" htmlFor="url">
+                <label
+                  className="block font-bold mb-2 dark:text-gray-100"
+                  htmlFor="url"
+                >
                   Website URL:
                 </label>
                 <input
                   id="url"
-                  className="w-full border rounded p-2"
+                  className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   type="url"
                   value={forms.url.url}
                   onChange={(e) =>
@@ -215,9 +234,11 @@ export default function App() {
             {selectedType === "vcard" && (
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-bold mb-1">First Name:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    First Name:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.vcard.firstName}
                     onChange={(e) =>
                       handleFormChange("vcard", "firstName", e.target.value)
@@ -225,9 +246,11 @@ export default function App() {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold mb-1">Last Name:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Last Name:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.vcard.lastName}
                     onChange={(e) =>
                       handleFormChange("vcard", "lastName", e.target.value)
@@ -235,9 +258,11 @@ export default function App() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Organization:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Organization:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.vcard.org}
                     onChange={(e) =>
                       handleFormChange("vcard", "org", e.target.value)
@@ -245,9 +270,11 @@ export default function App() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Title:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Title:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.vcard.title}
                     onChange={(e) =>
                       handleFormChange("vcard", "title", e.target.value)
@@ -255,9 +282,11 @@ export default function App() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Phone:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Phone:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.vcard.phone}
                     onChange={(e) =>
                       handleFormChange("vcard", "phone", e.target.value)
@@ -265,9 +294,11 @@ export default function App() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Email:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Email:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.vcard.email}
                     onChange={(e) =>
                       handleFormChange("vcard", "email", e.target.value)
@@ -279,9 +310,11 @@ export default function App() {
             {selectedType === "wifi" && (
               <div className="grid grid-cols-2 gap-2">
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">SSID:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    SSID:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.wifi.ssid}
                     onChange={(e) =>
                       handleFormChange("wifi", "ssid", e.target.value)
@@ -289,9 +322,11 @@ export default function App() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Password:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Password:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.wifi.password}
                     onChange={(e) =>
                       handleFormChange("wifi", "password", e.target.value)
@@ -306,9 +341,12 @@ export default function App() {
                     onChange={(e) =>
                       handleFormChange("wifi", "hidden", e.target.checked)
                     }
-                    className="mr-2"
+                    className="mr-2 dark:bg-gray-700 dark:border-gray-600"
                   />
-                  <label htmlFor="hidden" className="font-bold">
+                  <label
+                    htmlFor="hidden"
+                    className="font-bold dark:text-gray-100"
+                  >
                     Hidden network
                   </label>
                 </div>
@@ -317,9 +355,11 @@ export default function App() {
             {selectedType === "event" && (
               <div className="grid grid-cols-2 gap-2">
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Title:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Title:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.event.summary}
                     onChange={(e) =>
                       handleFormChange("event", "summary", e.target.value)
@@ -327,9 +367,11 @@ export default function App() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Location:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Location:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.event.location}
                     onChange={(e) =>
                       handleFormChange("event", "location", e.target.value)
@@ -337,9 +379,11 @@ export default function App() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block font-bold mb-1">Description:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Description:
+                  </label>
                   <input
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.event.description}
                     onChange={(e) =>
                       handleFormChange("event", "description", e.target.value)
@@ -347,11 +391,13 @@ export default function App() {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold mb-1">Start:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    Start:
+                  </label>
                   <input
                     type="datetime-local"
                     step="900"
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.event.start}
                     onChange={(e) =>
                       handleFormChange("event", "start", e.target.value)
@@ -359,11 +405,13 @@ export default function App() {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold mb-1">End:</label>
+                  <label className="block font-bold mb-1 dark:text-gray-100">
+                    End:
+                  </label>
                   <input
                     type="datetime-local"
                     step="900"
-                    className="w-full border rounded p-2"
+                    className="w-full border rounded p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     value={forms.event.end}
                     onChange={(e) =>
                       handleFormChange("event", "end", e.target.value)
@@ -371,7 +419,7 @@ export default function App() {
                   />
                 </div>
                 {!isEventDateValid && (
-                  <p className="text-red-500 text-sm mt-2">
+                  <p className="text-red-500 text-sm mt-2 dark:text-red-400">
                     Data początkowa nie może być późniejsza niż końcowa.
                   </p>
                 )}
@@ -383,8 +431,8 @@ export default function App() {
                   <button
                     className={`px-3 py-1 rounded ${
                       forms.message.type === "email"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200"
+                        ? "bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-100"
+                        : "bg-gray-200 dark:bg-gray-700 dark:text-gray-100"
                     }`}
                     onClick={() => handleMsgTypeChange("email")}
                     type="button"
@@ -394,8 +442,8 @@ export default function App() {
                   <button
                     className={`px-3 py-1 rounded ${
                       forms.message.type === "sms"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200"
+                        ? "bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-100"
+                        : "bg-gray-200 dark:bg-gray-700 dark:text-gray-100"
                     }`}
                     onClick={() => handleMsgTypeChange("sms")}
                     type="button"
@@ -405,8 +453,8 @@ export default function App() {
                   <button
                     className={`px-3 py-1 rounded ${
                       forms.message.type === "phone"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200"
+                        ? "bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-100"
+                        : "bg-gray-200 dark:bg-gray-700 dark:text-gray-100"
                     }`}
                     onClick={() => handleMsgTypeChange("phone")}
                     type="button"
@@ -416,25 +464,31 @@ export default function App() {
                 </div>
                 {forms.message.type === "email" && (
                   <div>
-                    <label className="block font-bold mb-1">Email:</label>
+                    <label className="block font-bold mb-1 dark:text-gray-100">
+                      Email:
+                    </label>
                     <input
-                      className="w-full border rounded p-2 mb-1"
+                      className="w-full border rounded p-2 mb-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       value={forms.message.email}
                       onChange={(e) =>
                         handleFormChange("message", "email", e.target.value)
                       }
                     />
-                    <label className="block font-bold mb-1">Subject:</label>
+                    <label className="block font-bold mb-1 dark:text-gray-100">
+                      Subject:
+                    </label>
                     <input
-                      className="w-full border rounded p-2 mb-1"
+                      className="w-full border rounded p-2 mb-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       value={forms.message.subject}
                       onChange={(e) =>
                         handleFormChange("message", "subject", e.target.value)
                       }
                     />
-                    <label className="block font-bold mb-1">Body:</label>
+                    <label className="block font-bold mb-1 dark:text-gray-100">
+                      Body:
+                    </label>
                     <textarea
-                      className="w-full border rounded p-2 h-40"
+                      className="w-full border rounded p-2 h-40 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       value={forms.message.body}
                       onChange={(e) =>
                         handleFormChange("message", "body", e.target.value)
@@ -444,17 +498,21 @@ export default function App() {
                 )}
                 {forms.message.type === "sms" && (
                   <div>
-                    <label className="block font-bold mb-1">Phone:</label>
+                    <label className="block font-bold mb-1 dark:text-gray-100">
+                      Phone:
+                    </label>
                     <input
-                      className="w-full border rounded p-2 mb-1"
+                      className="w-full border rounded p-2 mb-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       value={forms.message.phone}
                       onChange={(e) =>
                         handleFormChange("message", "phone", e.target.value)
                       }
                     />
-                    <label className="block font-bold mb-1">Message:</label>
+                    <label className="block font-bold mb-1 dark:text-gray-100">
+                      Message:
+                    </label>
                     <textarea
-                      className="w-full border rounded p-2 h-40"
+                      className="w-full border rounded p-2 h-40 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       value={forms.message.body}
                       onChange={(e) =>
                         handleFormChange("message", "body", e.target.value)
