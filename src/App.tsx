@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { QRCodeGenerator } from "./components/QRCodeGenerator";
 import {
@@ -161,9 +160,9 @@ export default function App() {
     new Date(forms.event.start) <= new Date(forms.event.end);
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-start bg-gray-100 p-4">
+    <div className="min-h-screen w-screen flex justify-center items-center bg-gray-100">
       <div
-        className="bg-white rounded-2xl shadow-xl p-4 md:p-8 w-full min-w-[1200px] min-h-[700px] flex flex-col md:flex-row items-start"
+        className="bg-white rounded-2xl shadow-xl p-4 md:p-8 min-w-[400px] max-w-[1200px] min-h-[700px] flex flex-col md:flex-row items-start mx-auto"
         style={{ columnGap: "5vw" }}
       >
         {/* Left Column: Function selection and input */}
