@@ -14,6 +14,15 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
 }) => {
   const qrRef = useRef<HTMLDivElement>(null);
   const qrInstance = useRef<QRCodeStyling | null>(null);
+  const [feedback, setFeedback] = React.useState<string>("");
+  const feedbackTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // Helper to show feedback for 1.5s
+  const showFeedback = (msg: string) => {
+    setFeedback(msg);
+    if (feedbackTimeout.current) clearTimeout(feedbackTimeout.current);
+    feedbackTimeout.current = setTimeout(() => setFeedback(""), 1500);
+  };
 
   // Create QRCodeStyling instance only once
   useEffect(() => {
@@ -64,19 +73,53 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
   const handleDownload = () => {
     if (qrInstance.current) {
       qrInstance.current.download({ extension: "png" });
+      showFeedback("Zapisano!");
+    }
+  };
+
+  // Copy to clipboard
+  const handleCopy = async () => {
+    if (qrInstance.current) {
+      // Get image as Blob
+      const blob = await qrInstance.current.getRawData("png");
+      if (blob && blob instanceof Blob) {
+        try {
+          await navigator.clipboard.write([
+            new window.ClipboardItem({ [blob.type]: blob })
+          ]);
+          showFeedback("Skopiowano!");
+        } catch (err) {
+          // No alert: silent fail
+        }
+      }
     }
   };
 
   return (
     <div className="flex flex-col items-center mt-4">
       <div ref={qrRef} className="mb-4" />
-      <button
-        className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow"
-        onClick={handleDownload}
-        type="button"
-      >
-        Download as PNG
-      </button>
+      <div className="flex gap-4">
+        <button
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow"
+          onClick={handleDownload}
+          type="button"
+        >
+          Save
+        </button>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow"
+          onClick={handleCopy}
+          type="button"
+        >
+          Copy
+        </button>
+      </div>
+      {feedback && (
+        <div className="mt-2 text-green-600 text-sm font-semibold transition-opacity duration-300">
+          {feedback}
+        </div>
+      )}
+
     </div>
   );
 };
