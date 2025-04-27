@@ -119,7 +119,7 @@ export default function App() {
   const [size, setSize] = useState<number>(200);
 
   const [forms, setForms] = useState<FormsState>({
-    url: { url: "https://example.com" },
+    url: { url: "" },
     vcard: {
       firstName: "",
       lastName: "",
