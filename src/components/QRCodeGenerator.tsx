@@ -88,7 +88,7 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
             new window.ClipboardItem({ [blob.type]: blob })
           ]);
           showFeedback("Skopiowano!");
-        } catch (err) {
+        } catch {
           // No alert: silent fail
         }
       }
@@ -97,17 +97,19 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-4">
-      <div ref={qrRef} className="mb-4" />
+      <div className="bg-white p-[15px] rounded-xl mb-4 flex justify-center items-center">
+        <div ref={qrRef} />
+      </div>
       <div className="flex gap-4">
         <button
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-2 px-4 rounded shadow border-0"
           onClick={handleDownload}
           type="button"
         >
           Save
         </button>
         <button
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow"
+          className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold py-2 px-4 rounded shadow border-0"
           onClick={handleCopy}
           type="button"
         >
@@ -115,7 +117,7 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
         </button>
       </div>
       {feedback && (
-        <div className="mt-2 text-green-600 text-sm font-semibold transition-opacity duration-300">
+        <div className="mt-2 text-pink-400 text-sm font-semibold transition-opacity duration-300">
           {feedback}
         </div>
       )}
